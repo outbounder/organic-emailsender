@@ -18,6 +18,14 @@ module.exports = Organel.extend(function(plasma, config){
     if(config.email.transport == "sendmail")
       this.transport = nodemailer.createTransport("sendmail");
     else
+    if(config.email.transport == "console.log") {
+      this.transport = {
+        sendMail: function(options, next) {
+          console.log(options)
+          next()
+        }
+      }
+    } else
       this.transport = nodemailer.createTransport("SMTP",{
         host: config.email.host,
         auth: {
@@ -33,18 +41,22 @@ module.exports = Organel.extend(function(plasma, config){
     var self = this
     this.loadTemplate(options, function(err, template){
       if(err) return next(err)
+    
+      var subject = ""
 
       if(self.config.i18next) {
         var i18n = require('i18next')
         i18n.init(self.config.i18next)
-        i18n.setLng(options.locale || self.config.locale)
+        if(options.locale || self.config.locale)
+          i18n.setLng(options.locale || self.config.locale)
+        
+        if(options.subject)
+          if(options.subject.key)
+            subject = i18n.t(options.subject.key, options.subject.data)
+          else
+            subject = i18n.t(options.subject)
 
-        var subject
-        if(options.subject.key)
-          subject = i18n.t(options.subject.key, options.subject.data)
-        else
-          subject = i18n.t(options.subject)
-
+        options.data = options.data || {}
         options.data.t = i18n.t
       }
 
@@ -54,6 +66,7 @@ module.exports = Organel.extend(function(plasma, config){
         subject: subject,
         html: template(options.data)
       }, options.sendMailOptions || {})
+
       if(self.transport)
         self.transport.sendMail(sendMailOptions, next)
       else

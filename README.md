@@ -1,6 +1,6 @@
 # organic-emailsender
 
-A simple i18next enabled email sender with jade templates.
+A simple email sender with jade and i18next templates.
 
 ## DNA 
 
@@ -15,9 +15,13 @@ A simple i18next enabled email sender with jade templates.
         {
           transport: "sendmail"
         }
+      // or just output to stdout
+        {
+          transport: "console.log"
+        }
       ,
       root: String,
-      cache: String,
+      cache: Boolean,
       debug: Boolean,
       i18next: Object, optional directly passed to i18next
       reactOn: String, default "sendEmail",
