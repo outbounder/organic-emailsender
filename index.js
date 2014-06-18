@@ -42,7 +42,7 @@ module.exports = Organel.extend(function(plasma, config){
     this.loadTemplate(options, function(err, template){
       if(err) return next(err)
     
-      var subject = ""
+      var subject = options.subject
 
       if(self.config.i18next) {
         var i18n = require('i18next')
