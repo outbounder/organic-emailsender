@@ -26,14 +26,14 @@ module.exports = Organel.extend(function(plasma, config){
         }
       }
     } else
-      this.transport = nodemailer.createTransport("SMTP",{
-        host: config.email.host,
-        auth: {
-          user: config.email.user,
-          pass: config.email.pass
-        }
-      })
+    if(config.email.transport == "smtp")
+      this.transport = nodemailer.createTransport("SMTP", config.email.options)
+    else
+      throw new Error("unknown transport")
   }
+
+  if(config.log && this.transport)
+    console.log("sending emails using", config.email.transport, config.email.options)
   
   this.on(config.reactOn || "sendEmail", this.sendEmail)
 }, {

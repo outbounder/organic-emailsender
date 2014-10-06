@@ -1,6 +1,6 @@
 {
   "name": "organic-emailsender",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple email sender with jade and i18next templates.",
   "main": "index.js",
   "scripts": {
