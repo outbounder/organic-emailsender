@@ -1,6 +1,6 @@
 {
   "name": "organic-emailsender",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A simple email sender with jade and i18next templates.",
   "main": "index.js",
   "scripts": {
@@ -9,14 +9,14 @@
   "author": "Boris Filipov",
   "license": "MIT",
   "dependencies": {
-    "organic": "~0.1.1",
-    "nodemailer": "~0.6.0",
+    "async": "~0.2.10",
     "jade": "~1.1.5",
-    "underscore": "~1.5.2",
-    "async": "~0.2.10"
+    "nodemailer": "0.6.0",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {
-    "jasmine-node": "~1.13.1"
+    "jasmine-node": "~1.13.1",
+    "organic-plasma": "0.0.6"
   },
   "repository": {
     "type": "git",

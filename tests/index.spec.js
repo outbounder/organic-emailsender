@@ -1,9 +1,9 @@
 describe("index", function(){
-  var organic = require("organic")
+  var Plasma = require("organic-plasma")
   var EmailSender = require("../index")
 
   it("sends email", function(next){
-    var instance = new EmailSender(new organic.Plasma(), {
+    var instance = new EmailSender(new Plasma(), {
       from: "me",
       root: __dirname+"/data"
     })

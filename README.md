@@ -5,21 +5,17 @@ A simple email sender with jade and i18next templates.
 ## DNA 
 
     {
-      email: Object as:
-        {
-          user: String,
-          pass: String,
-          host: String
+      email: {
+        transport: String, // "sendmail" || "console.log" || "smtp" || "devnull",
+        options: { // used for `smtp` transport only
+          port: Number,
+          host: String,
+          auth: {
+            user: String,
+            pass: String
+          }
         }
-      //  or
-        {
-          transport: "sendmail"
-        }
-      // or just output to stdout
-        {
-          transport: "console.log"
-        }
-      ,
+      },
       root: String,
       cache: Boolean,
       debug: Boolean,
