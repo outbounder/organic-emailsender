@@ -18,4 +18,23 @@ describe("index", function(){
       next()
     })
   })
+  
+  it("sends email via plasma", function(next){
+    var plasma = new Plasma()
+    var instance = new EmailSender(plasma, {
+      from: "me",
+      root: __dirname+"/data"
+    })
+    plasma.emit({
+      type: "sendEmail",
+      template: "email",
+      to: "somebody",
+      subject: "test"
+    }, function(err, options){
+      expect(options.from).toBe("me")
+      expect(options.to).toBe("somebody")
+      expect(options.html).toContain("sample")
+      next()
+    })
+  })
 })

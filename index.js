@@ -41,7 +41,10 @@ module.exports = function(plasma, dna){
   if(dna.log && this.transport)
     console.log("sending emails using", dna.email.transport, dna.email.options)
   
-  plasma.on(dna.reactOn || "sendEmail", this.sendEmail)
+  var self = this
+  plasma.on(dna.reactOn || "sendEmail", function(c, next){
+    self.sendEmail(c, next)
+  })
 }
 
 module.exports.prototype.sendEmail = function(options, next){
