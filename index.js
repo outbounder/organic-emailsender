@@ -171,6 +171,9 @@ module.exports.prototype.loadTemplate = function(options) {
 
         template = new EmailTemplate(fileOrDir)
 
+        if (self.dna.cache)
+          self.templateCache[options.template + "-" + locale] = template
+
         deferred.resolve(template)
       } else
         deferred.reject(new Error('couldn\'t find none of ' + templateTargets.join(' || ')))
