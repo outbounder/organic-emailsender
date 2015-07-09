@@ -11,11 +11,15 @@ describe("index", function () {
       template: "email",
       to: "somebody",
       subject: "test"
-    }, function (err, options) {
+    })
+    .then(function (options) {
       expect(options.from).toBe("me")
       expect(options.to).toBe("somebody")
       expect(options.html).toContain("sample")
       next()
+    })
+    .catch(function (err) {
+      expect(err).toBeUndefined()
     })
   })
 

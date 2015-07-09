@@ -2,7 +2,6 @@ var nodemailer = require("nodemailer")
 var jade = require("jade")
 var fs = require("fs")
 var path = require("path")
-var _ = require("underscore")
 var async = require("async")
 var R = require('ramda')
 var Promise = require('bluebird')
@@ -57,6 +56,7 @@ module.exports.prototype.sendEmail = function (options) {
 
   function checkOptions(template) {
     var subject = options.subject
+    options.template = template
 
     if (self.dna.i18next) {
       var i18n = require('i18next')
@@ -72,6 +72,7 @@ module.exports.prototype.sendEmail = function (options) {
 
       options.data = options.data || {}
       options.data.t = i18n.t
+      options.subject = subject
     }
 
     return options
@@ -79,12 +80,12 @@ module.exports.prototype.sendEmail = function (options) {
 
   function renderTmpl(options) {
     var deferred = Promise.defer()
-    if (template.render) {
-      template.render(options.data, function whenRendered (err, results) {
+    if (options.template.render) {
+      options.template.render(options.data, function whenRendered (err, results) {
         deferred.resolve(results.html)
       })
     } else
-      deferred.resolve(template(options.data))
+      deferred.resolve(options.template(options.data))
 
     return deferred.promise
   }
@@ -92,12 +93,12 @@ module.exports.prototype.sendEmail = function (options) {
   function send(html) {
     var deferred = Promise.defer()
 
-    var sendMailOptions = _.extend({
+    var sendMailOptions = R.merge(options.sendMailOptions || {}, {
       from: options.from || self.dna.from,
       to: options.to || self.dna.to,
-      subject: subject,
+      subject: options.subject,
       html: html
-    }, options.sendMailOptions || {})
+    })
 
     if(self.transport)
       self.transport.sendMail(sendMailOptions, function (err, res) {
@@ -153,21 +154,26 @@ module.exports.prototype.loadTemplate = function(options) {
     fs.stat(fileOrDir, function whenGotStats(err, stats) {
       if(stats.isFile()) {
         fs.readFile(fileOrDir, function whenReadFile(err, fileData) {
-          if (err) return next(err)
+          if (err) return deferred.reject(err)
+
           template = jade.compile(fileData, {
             filename: fileOrDir,
             debug: self.dna.debug
           })
+
           if (self.dna.cache)
             self.templateCache[options.template + "-" + locale] = template
-          next(null, template)
+
+          deferred.resolve(template)
         })
       } else if(stats.isDirectory()) {
         var EmailTemplate = require('email-templates').EmailTemplate
+
         template = new EmailTemplate(fileOrDir)
-        next(null, template)
+
+        deferred.resolve(template)
       } else
-        next(new Error("couldn't find none of "+ templateTargets.join(" || ")))
+        deferred.reject(new Error('couldn\'t find none of ' + templateTargets.join(' || ')))
     })
   })
 
