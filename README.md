@@ -1,8 +1,8 @@
-# organic-emailsender
+# organic-emailsender v0.1.0
 
 A simple email sender with jade and i18next templates.
 
-## DNA 
+## DNA
 
     {
       email: {
@@ -40,5 +40,10 @@ With chemical:
     }
 
 * Loads a jade template by `config.root`+ `template` + (optionally -`locale`) + .jade path
-* renders the template with `data` 
+* renders the template with `data`
 * sends the resulted email to given email address
+
+## `template` property
+
+  * can be a path to jade template file
+  * can be a path to directory, rendering final template html will be via [email-templates](https://github.com/niftylettuce/node-email-templates)

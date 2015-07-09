@@ -1,12 +1,15 @@
 {
   "name": "organic-emailsender",
-  "version": "0.0.4",
-  "description": "A simple email sender with jade and i18next templates.",
+  "version": "0.1.0",
+  "description": "A simple email sender with templates support",
   "main": "index.js",
   "scripts": {
     "test": "jasmine-node ./tests"
   },
   "author": "Boris Filipov",
+  "contributors": [
+    "Aleksey Gonchar (https://github.com/aleksey-gonchar)"
+  ],
   "license": "MIT",
   "dependencies": {
     "async": "~0.2.10",
@@ -27,5 +30,13 @@
   "bugs": {
     "url": "https://github.com/outbounder/organic-emailsender/issues"
   },
-  "homepage": "https://github.com/outbounder/organic-emailsender"
+  "homepage": "https://github.com/outbounder/organic-emailsender",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [
+    "organic",
+    "email",
+    "sender"
+  ]
 }
