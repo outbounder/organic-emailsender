@@ -82,6 +82,7 @@ module.exports.prototype.sendEmail = function (options) {
     var deferred = Promise.defer()
     if (options.template.render) {
       options.template.render(options.data, function whenRendered (err, results) {
+        if (err) return deferred.reject(err)
         deferred.resolve(results.html)
       })
     } else
