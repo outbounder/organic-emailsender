@@ -6,7 +6,7 @@ A simple email sender with jade and i18next templates.
 
     {
       email: {
-        transport: String, // "sendmail" || "console.log" || "smtp" || "devnull",
+        transport: String, // "sendmail" || "console.log" || "smtp" || "devnull" || "plasma",
         options: { // used for `smtp` transport only
           port: Number,
           host: String,
@@ -14,6 +14,9 @@ A simple email sender with jade and i18next templates.
             user: String,
             pass: String
           }
+        },
+        options: { // used for `plasma` transport only
+          emitAs: String
         }
       },
       root: String,

@@ -36,6 +36,13 @@ module.exports = function(plasma, dna){
         }
       }
     } else
+    if(dna.email.transport == "plasma") {
+      this.transport = {
+        sendMail: function(options, next) {
+          plasma.emit({type: dna.email.options.emitAs, options: options}, next)
+        }
+      }
+    } else
       throw new Error("unknown transport")
   }
 
