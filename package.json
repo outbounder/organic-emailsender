@@ -1,6 +1,6 @@
 {
   "name": "organic-emailsender",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple email sender with templates support",
   "main": "index.js",
   "scripts": {

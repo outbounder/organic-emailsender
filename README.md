@@ -1,4 +1,4 @@
-# organic-emailsender v0.1.0
+# organic-emailsender v0.2.1
 
 A simple email sender with jade and i18next templates.
 
@@ -26,7 +26,8 @@ A simple email sender with jade and i18next templates.
       reactOn: String, default "sendEmail",
       from: String, default email address
       to: String, default email address
-      locale: String, optional
+      locale: String, optional,
+      waitForDelivery: Boolean, default false, blocks reaction callback until email is delivered via `sendmail` or `smtp`
     }
 
 ## Reaction

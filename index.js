@@ -15,12 +15,36 @@ module.exports = function(plasma, dna){
   this.dna = dna
   this.templateCache = {}
   if(dna.email) {
-    if(dna.email.transport == "sendmail")
-      this.transport = nodemailer.createTransport("sendmail");
-    else
-    if(dna.email.transport == "smtp")
-      this.transport = nodemailer.createTransport("SMTP", dna.email.options)
-    else
+    if(dna.email.transport == "sendmail") {
+      if (dna.waitForDelivery) {
+        this.transport = nodemailer.createTransport("sendmail");
+      } else {
+        var emailTransport = nodemailer.createTransport("sendmail")
+        this.transport = {
+          sendMail: function (options, next) {
+            emailTransport.sendMail(options, function (err) {
+              if (err) console.error(err)
+            })
+            next()
+          }
+        }
+      }
+    } else
+    if(dna.email.transport == "smtp") {
+      if (dna.waitForDelivery) {
+        this.transport = nodemailer.createTransport("SMTP", dna.email.options)
+      } else {
+        var emailTransport = nodemailer.createTransport("SMTP", dna.email.options)
+        this.transport = {
+          sendMail: function (options, next) {
+            emailTransport.sendMail(options, function (err) {
+              if (err) console.error(err)
+            })
+            next()
+          }
+        }
+      }
+    } else
     if(dna.email.transport == "console.log") {
       this.transport = {
         sendMail: function(options, next) {
