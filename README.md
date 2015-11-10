@@ -1,53 +1,53 @@
-# organic-emailsender v0.2.1
+# organic-emailsender v0.3.0
 
-A simple email sender with jade and i18next templates.
+A simple email sender
 
-## DNA
+## `dna`
 
     {
       email: {
-        transport: String, // "sendmail" || "console.log" || "smtp" || "devnull" || "plasma",
-        options: { // used for `smtp` transport only
-          port: Number,
-          host: String,
-          auth: {
-            user: String,
-            pass: String
-          }
-        },
+        transport: String, // "console.log" || "devnull" || "plasma" || <path-to-transport-init>,
+        options: Object // passed to transport init
         options: { // used for `plasma` transport only
           emitAs: String
         }
       },
-      root: String,
-      cache: Boolean,
-      debug: Boolean,
-      i18next: Object, optional directly passed to i18next
-      reactOn: String, default "sendEmail",
+      reactOn: String,
       from: String, default email address
       to: String, default email address
-      locale: String, optional,
-      waitForDelivery: Boolean, default false, blocks reaction callback until email is delivered via `sendmail` or `smtp`
+      waitForDelivery: Boolean, default false, blocks reaction callback until email is delivered via `sendmail` || `smtp` || `plasma`,
+      log: Boolean, default `false`
     }
 
-## Reaction
-
-With chemical:
+### `dna.reactOn` chemical, default `deliverEmail`
 
     {
-      to: String, optional if config.toEmailAddress is set
-      from: String, optional if config.fromEmailAddress is set
-      template: String,
-      locale: String, optional,
-      sendMailOptions: Object, optional,
-      data: Object
+      to: String, optional, default `dna.to`
+      from: String, optional, default `dna.from`
+      subject: String,
+      html: String,
+      text: String,
+      ...
     }
 
-* Loads a jade template by `config.root`+ `template` + (optionally -`locale`) + .jade path
-* renders the template with `data`
-* sends the resulted email to given email address
+### `dna.email.transport`
 
-## `template` property
+When passed a file path it will be used to initialize transport, the module should have the following interface
 
-  * can be a path to jade template file
-  * can be a path to directory, rendering final template html will be via [email-templates](https://github.com/niftylettuce/node-email-templates)
+    module.exports = function (options) {
+      return {
+        sendMail: function (email, done) {
+          // deliver email.from to email.to, email.subject, email.html, email.text
+          done(err, result)
+        }
+      }
+    }
+
+#### using nodemailer for transport
+
+1. `dna.email.transport` = `path/to/nodemailer-init-script.js`
+2. `path/to/nodemailer-init-script.js`
+
+    module.exports = function (options) {
+      return nodemailer.createTransport(options)
+    }

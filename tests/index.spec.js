@@ -2,43 +2,48 @@ describe("index", function () {
   var Plasma = require("organic-plasma")
   var EmailSender = require("../index")
 
-  it("sends email", function (next) {
-    var instance = new EmailSender(new Plasma(), {
-      from: "me",
-      root: __dirname + "/data"
-    })
-    instance.sendEmail({
-      template: "email",
-      to: "somebody",
-      subject: "test"
-    })
-    .then(function (options) {
-      expect(options.from).toBe("me")
-      expect(options.to).toBe("somebody")
-      expect(options.html).toContain("sample")
-      next()
-    })
-    .catch(function (err) {
-      expect(err).toBeUndefined()
-    })
-  })
-
   it("sends email via plasma", function (next) {
     var plasma = new Plasma()
     var instance = new EmailSender(plasma, {
       from: "me",
-      root: __dirname + "/data"
+      email: {
+        transport: "plasma",
+        options: {
+          emitAs: "transportEmail"
+        }
+      }
     })
-    plasma.emit({
-      type: "sendEmail",
-      template: "email",
-      to: "somebody",
-      subject: "test"
-    }, function (err, options) {
-      expect(options.from).toBe("me")
-      expect(options.to).toBe("somebody")
-      expect(options.html).toContain("sample")
+    plasma.on("transportEmail", function (email) {
+      expect(email.type).toBe("transportEmail")
+      expect(email.from).toBe("me")
+      expect(email.to).toBe("somebody")
       next()
     })
+    plasma.emit({
+      type: "deliverEmail",
+      to: "somebody",
+      subject: "test"
+    })
+  })
+
+  it("sends email custom transport", function (next) {
+    var plasma = new Plasma()
+    var instance = new EmailSender(plasma, {
+      from: "me",
+      email: {
+        transport: 'tests/transport.js',
+        options: function (email, done) {
+          expect(email.type).toBe("deliverEmail")
+          expect(email.from).toBe("me")
+          expect(email.to).toBe("somebody")
+          done()
+        }
+      }
+    })
+    plasma.emit({
+      type: "deliverEmail",
+      to: "somebody",
+      subject: "test"
+    }, next)
   })
 })
