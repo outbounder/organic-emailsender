@@ -51,16 +51,17 @@ module.exports = function(plasma, dna){
     c.to = c.to || dna.to
     c.from = c.from || dna.from
     self.transport.sendMail(c, function (err, info) {
-      switch(true) {
-        case !!err:
-          console.error(err)
-          if (next) return next(err)
-        case info instanceof Error:
-          console.error(info)
-          if (next) return next(info)
+      if (err) {
+        console.error(err)
+        return next && next(err)
       }
-      if (dna.log) console.log("email sent successfully", info)
-      if (next) next(null, info)
+      if (info instanceof Error) {
+        console.error(info)
+        return next && next(info)
+      }
+
+      dna.log && console.log("email sent successfully", info)
+      next && next(null, info)
     })
   })
 }
