@@ -1,4 +1,4 @@
-# organic-emailsender v0.3.0
+# organic-emailsender v0.3.1
 
 A simple email sender
 
