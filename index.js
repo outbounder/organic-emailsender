@@ -50,8 +50,18 @@ module.exports = function(plasma, dna){
   plasma.on(dna.reactOn || "deliverEmail", function(c, next){
     c.to = c.to || dna.to
     c.from = c.from || dna.from
-    self.transport.sendMail(c, next || function (err) {
-      if (err) console.error(err)
+    self.transport.sendMail(c, function (err, info) {
+      if (err) {
+        console.error(err)
+        return next && next(err)
+      }
+      if (info instanceof Error) {
+        console.error(info)
+        return next && next(info)
+      }
+
+      dna.log && console.log("email sent successfully", info)
+      next && next(null, info)
     })
   })
 }
