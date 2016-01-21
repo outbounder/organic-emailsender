@@ -3,7 +3,7 @@ describe("index", function () {
   var EmailSender = require("../index")
 
   it("sends email via plasma", function (next) {
-    var plasma = new Plasma()
+    var plasma = require('organic-plasma-feedback')(new Plasma())
     var instance = new EmailSender(plasma, {
       from: "me",
       email: {
@@ -27,7 +27,7 @@ describe("index", function () {
   })
 
   it("sends email custom transport", function (next) {
-    var plasma = new Plasma()
+    var plasma = require('organic-plasma-feedback')(new Plasma())
     var instance = new EmailSender(plasma, {
       from: "me",
       email: {
